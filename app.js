@@ -1,12 +1,16 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import UserRouter from './routes/usersRouter.js'
 import { Response } from './utils/core.js'
 import mongoose from 'mongoose';
+import path from 'path'
+import { fileURLToPath } from 'url';
+import UserRouter from './routes/usersRouter.js'
+import AuthRouter from './routes/authRouter.js'
 
 dotenv.config();
 const app = express();
 app.use(express.json());
+app.use(express.static(path.join(path.dirname(fileURLToPath(import.meta.url)), 'public')))
 app.set('view engine', 'ejs')
 
 // mongoose
@@ -42,6 +46,7 @@ const server_render = () => {
 
 const routes = () => {
     app.use('/api/users', UserRouter)
+    app.use('/api/user', AuthRouter)
 
     // errors
     app.use((err, req, res, next) => {

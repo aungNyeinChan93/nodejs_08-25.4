@@ -10,6 +10,8 @@ router.route('/')
     .post(logMiddleware, UserController.create)
 
 router.route('/:id')
+    .get(getById_middleware, UserController.show)
     .put(getById_middleware, UserController.update)
+    .delete(getById_middleware, UserController.destroy)
 
 export default router;

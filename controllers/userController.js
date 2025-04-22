@@ -40,7 +40,13 @@ const UserController = {
         }
     },
     show: async (req, res, next) => {
-
+        try {
+            if (req.user) {
+                Response.success(res, 'Detail User', req.user, 200)
+            }
+        } catch (error) {
+            next(error)
+        }
     },
     update: async (req, res, next) => {
         try {
@@ -59,7 +65,16 @@ const UserController = {
 
     },
     destroy: async (req, res, next) => {
-
+        try {
+            const user = req.user;
+            if (!user) {
+                return Response.fail(res, 'delete fail', {}, 400)
+            }
+            await user.deleteOne();
+            Response.success(res, 'Delete success!', user, 200)
+        } catch (error) {
+            next(error)
+        }
     },
 }
 
