@@ -1,0 +1,23 @@
+{
+  "name": "express_tuto_5.24.4",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "anc",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "mongoose": "^8.13.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
