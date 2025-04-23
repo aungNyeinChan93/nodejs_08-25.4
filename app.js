@@ -1,11 +1,12 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import { Response } from './utils/core.js'
+import { Response, ErrorLog } from './utils/core.js'
 import mongoose from 'mongoose';
 import path from 'path'
 import { fileURLToPath } from 'url';
 import UserRouter from './routes/usersRouter.js'
 import AuthRouter from './routes/authRouter.js'
+import TestRouter from './routes/testRouter.js'
 
 dotenv.config();
 const app = express();
@@ -47,9 +48,13 @@ const server_render = () => {
 const routes = () => {
     app.use('/api/users', UserRouter)
     app.use('/api/user', AuthRouter)
+    app.use('/api/tests', TestRouter)
+
+
 
     // errors
     app.use((err, req, res, next) => {
+        ErrorLog.write(err.message)
         Response.success(res, 'Server Error', err.message, 500)
     })
 }

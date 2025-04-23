@@ -1,5 +1,8 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs'
+import path from 'path'
+import { fileURLToPath } from 'url';
+import fs from 'fs'
 
 const Response = {
     success: (res, message = '', result = {}, status = 200) => {
@@ -40,4 +43,22 @@ const Bcrypt = {
     }
 }
 
-export { Response, JWT, Bcrypt }
+const ErrorLog = {
+    write: (err) => {
+        const fileName = Date.now().toLocaleString() + "_anc_" + ".txt"
+        const filePath = path.join(path.dirname(fileURLToPath(import.meta.url)), '../logger/errors/', fileName)
+        fs.writeFile(filePath, JSON.stringify(err), { encoding: 'utf-8' }, (error) => {
+            if (!error) {
+                console.log(`Error Log Saved!`);
+            } else {
+                console.log(error.message);
+            }
+        })
+    },
+    read: async (fileName) => {
+        return await fs.promises.readFile(path.join(path.dirname(fileURLToPath(import.meta.url)), '../logger/errors/', fileName),
+            { encoding: "utf-8" })
+    }
+}
+
+export { Response, JWT, Bcrypt, ErrorLog }
