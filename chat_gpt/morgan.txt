@@ -1,0 +1,48 @@
+what is morgan?
+Morgan is an HTTP request logger middleware for Node.js, most commonly used with Express.js.
+
+📌 In Simple Terms:
+Morgan logs every incoming request to your server — including the method, URL, status, response time, and more — so you can monitor traffic, debug issues, or generate access logs.
+
+🔧 Why Use Morgan?
+🐞 Debugging: Easily spot what requests are hitting your server.
+
+📈 Monitoring: See response times, status codes, etc.
+
+📁 Access logs: Persist logs to a file for audits or analytics.
+
+🎨 Customizable: Use predefined formats or create your own.
+
+🔌 Middleware: Plug-and-play with Express.
+
+
+📦 Built-in Formats
+Morgan provides several predefined formats to quickly log requests:
+
+Format | Description
+"combined"	    Logs everything like: IP, date, method, URL, status, referrer, user agent. Similar to Apache’s combined log format.
+"common"	    A bit shorter: IP, date, method, URL, status, content length.
+"dev"	        Color-coded, concise logs for development. Includes method, URL, status, response time.
+"short"	        Minimal output, showing basic request data.
+"tiny"	        Very minimal – method, URL, status, and response time
+
+🛠️ Custom Format Strings
+Token | Meaning
+:method | HTTP method (GET, POST, etc.)
+:url | Request URL
+:status | HTTP status code
+:res[header] | Response header value
+:req[header] | Request header value
+:response-time | Time (ms) to finish the response
+:date | Date and time of the request
+:remote-addr | IP address of the client
+:referrer or :ref | Referrer header
+:user-agent | User agent string
+:http-version | HTTP version
+:remote-user | Authenticated user (if any)
+:content-length | Response content length
+
+eg: custome Format 
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
+
+
