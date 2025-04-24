@@ -17,4 +17,6 @@ const { message, result } = await all();
 console.log(`All users api message is ${message}`);
 console.log(result);
 
+// throw new Error('test')
+
 

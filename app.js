@@ -2,28 +2,27 @@ import dotenv from 'dotenv';
 import express from 'express';
 import mongooseConnect from './config/db.js';
 import path from 'path'
-import { fileURLToPath } from 'url';
-import { Response, ErrorLog } from './utils/core.js'
-import UserRouter from './routes/usersRouter.js'
-import AuthRouter from './routes/authRouter.js'
-import TestRouter from './routes/testRouter.js'
 import cors from 'cors'
 import morgan from 'morgan';
+import fs from 'fs'
+import { fileURLToPath } from 'url';
+import UserRouter from './routes/usersRouter.js'
+import AuthRouter from './routes/authRouter.js'
+import TestRouter from './Tests/routes/testRouter.js'
+import errorHandler from './middleware/errorHandler.js';
 
 
 dotenv.config();
+mongooseConnect();
 const app = express();
 app.use(express.json());
 app.use(express.static(path.join(path.dirname(fileURLToPath(import.meta.url)), 'public')))
 app.use(cors())
-app.use(morgan(':method :url :status :date :user-agent'))  //custome morgan
 app.set('view engine', 'ejs')
 
-mongooseConnect();
-// mongoose.connect(process.env.DB_URL).then(() => {
-//     console.log(`${process.env.DB_URL} is running!`);
-
-// })
+// morgan with log
+const request_stream = fs.createWriteStream(path.join(path.dirname(fileURLToPath(import.meta.url)), 'logger', 'requests', 'all.txt'), { encoding: 'utf-8' })
+app.use(morgan(':method :url :status :date :user-agent', { stream: request_stream }))
 
 // server 
 app.listen(process.env.PORT, () => {
@@ -31,7 +30,6 @@ app.listen(process.env.PORT, () => {
     server_render();
     routes();
 });
-
 
 const server_render = () => {
     app.get('/', (_, res) => {
@@ -50,16 +48,22 @@ const server_render = () => {
     app.get('/products', (req, res, next) => {
         res.render('products/index', { products: 'this is products' })
     })
+
+    app.get('/customers', (req, res, next) => {
+        const customers = ['koko', 'susu', 'mgmg'];
+        res.render('customers/index', { customers }, (err, html) => {
+            console.log(err);
+        })
+    })
 }
 
 const routes = () => {
     app.use('/api/users', UserRouter)
     app.use('/api/user', AuthRouter)
+
+    // for testing routes
     app.use('/api/tests', TestRouter)
 
     // Errors_handler
-    app.use((err, req, res, next) => {
-        ErrorLog.write(err.message)
-        Response.success(res, 'Server Error', err.message, 500)
-    })
+    app.use(errorHandler)
 }

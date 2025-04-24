@@ -46,3 +46,41 @@ eg: custome Format
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 
 
+- immediate option 
+📌 Logs request before response is sent. This is useful if:
+
+You want to measure how many requests are hitting your server (even if some time out or fail).
+
+You want logs even if response handling throws errors.
+
+app.use(morgan('dev', {
+  immediate: true
+}));
+❌❌❌❌❌❌❌❌❌❌❌❌
+
+- skip option
+📌 Skip logging certain requests based on custom logic.
+
+app.use(morgan('combined', {
+  skip: (req, res) => res.statusCode < 400
+}));
+app.use(morgan('tiny', {
+  skip: req => req.url.startsWith('/static/')
+}));
+❌❌❌❌❌❌❌❌❌❌❌❌
+
+-stream option
+📌Instead of logging to stdout (console), you can write logs to a file or other stream.
+const fs = require('fs');
+const path = require('path');
+
+const logStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
+
+app.use(morgan('combined', { stream: logStream }));
+❌❌❌❌❌❌❌❌❌❌❌❌
+
+app.use(morgan('combined', {
+  immediate: true,
+  skip: (req, res) => req.method === 'OPTIONS',
+  stream: fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+}));
